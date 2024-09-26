@@ -3,6 +3,17 @@ deflng a-z
 $console:only
 _dest _console
 
+'Removed leading @
+'Line continutation formatting
+'Removed _OFF (OFF appears to be just as valid)
+'Removed _CLIP, 
+const KEYWORDS = "?@$CHECKING@$ERROR@$CONSOLE@ONLY@$DYNAMIC@$ELSE@$ELSEIF@$END@$ENDIF@$EXEICON@$IF@$INCLUDE@$LET@$RESIZE@$SCREENHIDE@$SCREENSHOW@$STATIC@$VERSIONINFO@$VIRTUALKEYBOARD@ABS@ABSOLUTE@ACCESS@ALIAS@AND@APPEND@AS@ASC@ATN@BASE@BEEP@BINARY@BLOAD@BSAVE@BYVAL@CALL@CALLS@CASE@IS@CDBL@CDECL@CHAIN@CHDIR@CHR$@CINT@CIRCLE@CLEAR@CLNG@CLOSE@CLS@COLOR@COM@COMMAND$@COMMON@CONST@COS@CSNG@CSRLIN@CUSTOMTYPE@CVD@CVDMBF@CVI@CVL@CVS@CVSMBF@DATA@DATE$@DECLARE@DEF@DEFDBL@DEFINT@DEFLNG@DEFSNG@DEFSTR@DIM@DO@DOUBLE@DRAW@DYNAMIC@ELSE@ELSEIF@END@ENDIF@ENVIRON@ENVIRON$@EOF@EQV@ERASE@ERDEV@ERDEV$@ERL@ERR@ERROR@EVERYCASE@EXIT@EXP@FIELD@FILEATTR@FILES@FIX@FN@FOR@FRE@FREE@FREEFILE@FUNCTION@GET@GOSUB@GOTO@HEX$@IF@IMP@INKEY$@INP@INPUT@INPUT$@INSTR@INT@INTEGER@INTERRUPT@INTERRUPTX@IOCTL@IOCTL$@KEY@KILL@LBOUND@LCASE$@LEFT$@LEN@LET@LIBRARY@LINE@LIST@LOC@LOCATE@LOCK@LOF@LOG@LONG@LOOP@LPOS@LPRINT@LSET@LTRIM$@MID$@MKD$@MKDIR@MKDMBF$@MKI$@MKL$@MKS$@MKSMBF$@MOD@NAME@NEXT@NOT@OCT$@OFF@ON@OPEN@OPTION@OR@OUT@OUTPUT@PAINT@PALETTE@PCOPY@PEEK@PEN@PLAY@PMAP@POINT@POKE@POS@PRESET@PRINT@PSET@PUT@RANDOM@RANDOMIZE@READ@REDIM@REM@RESET@RESTORE@RESUME@RETURN@RIGHT$@RMDIR@RND@RSET@RTRIM$@RUN@SADD@SCREEN@SEEK@SEG@SELECT@SETMEM@SGN@SHARED@SHELL@SIGNAL@SIN@SINGLE@SLEEP@SOUND@SPACE$@SPC@SQR@STATIC@STEP@STICK@STOP@STR$@STRIG@STRING@STRING$@SUB@SWAP@SYSTEM@TAB@TAN@THEN@TIME$@TIMER@TO@TROFF@TRON@TYPE@UBOUND@UCASE$@UEVENT@UNLOCK@UNTIL@USING@VAL@VARPTR@VARPTR$@VARSEG@VIEW@WAIT@WEND@WHILE@WIDTH@WINDOW@WRITE@XOR@_ACOS@_ACOSH@_ALPHA@_ALPHA32@_ARCCOT@_ARCCSC@_ARCSEC@_ASIN@_ASINH@_ATAN2@_ATANH@_AUTODISPLAY@_AXIS@_BACKGROUNDCOLOR@_BIN$@_BIT@_BLEND@_BLINK@_BLUE@_BLUE32@_BUTTON@_BUTTONCHANGE@_BYTE@_CEIL@_CLEARCOLOR@_CLIPBOARD$@_CLIPBOARDIMAGE@_COMMANDCOUNT@_CONNECTED@_CONNECTIONADDRESS$@_CONNECTIONADDRESS@_CONSOLE@_CONSOLETITLE@_CONTINUE@_CONTROLCHR@_COPYIMAGE@_COPYPALETTE@_COSH@_COT@_COTH@_CSC@_CSCH@_CV@_CWD$@_D2G@_D2R@_DEFAULTCOLOR@_DEFINE@_DELAY@_DEPTHBUFFER@_DESKTOPHEIGHT@_DESKTOPWIDTH@_DEST@_DEVICE$@_DEVICEINPUT@_DEVICES@_DIR$@_DIREXISTS@_DISPLAY@_DISPLAYORDER@_DONTBLEND@_DONTWAIT@" + _
+    "_ERRORLINE@_ERRORMESSAGE$@_EXIT@_EXPLICIT@_EXPLICITARRAY@_FILEEXISTS@_FLOAT@_FONT@_FONTHEIGHT@_FONTWIDTH@_FREEFONT@_FREEIMAGE@_FREETIMER@_FULLSCREEN@_G2D@_G2R@_GLRENDER@_GREEN@_GREEN32@_HEIGHT@_HIDE@_HYPOT@_ICON@_INCLERRORFILE$@_INCLERRORLINE@_INTEGER64@_KEYCLEAR@_KEYDOWN@_KEYHIT@_LASTAXIS@_LASTBUTTON@_LASTWHEEL@_LIMIT@_LOADFONT@_LOADIMAGE@_MAPTRIANGLE@_MAPUNICODE@_MEM@_MEMCOPY@_MEMELEMENT@_MEMEXISTS@_MEMFILL@_MEMFREE@_MEMGET@_MEMIMAGE@_MEMSOUND@_MEMNEW@_MEMPUT@_MIDDLE@_MK$@_MOUSEBUTTON@_MOUSEHIDE@_MOUSEINPUT@_MOUSEMOVE@_MOUSEMOVEMENTX@_MOUSEMOVEMENTY@_MOUSEPIPEOPEN@_MOUSESHOW@_MOUSEWHEEL@_MOUSEX@_MOUSEY@_NEWIMAGE@_OFFSET@_OPENCLIENT@_OPENCONNECTION@_OPENHOST@_OS$@_PALETTECOLOR@_PI@_PIXELSIZE@_PRESERVE@_PRINTIMAGE@_PRINTMODE@_PRINTSTRING@_PRINTWIDTH@_PUTIMAGE@_R2D@_R2G@_RED@_RED32@_RESIZE@_RESIZEHEIGHT@_RESIZEWIDTH@_RGB@_RGB32@_RGBA@_RGBA32@_ROUND@_SCREENCLICK@_SCREENEXISTS@_SCREENHIDE@_SCREENICON@_SCREENIMAGE@_SCREENMOVE@_SCREENPRINT@_SCREENSHOW@_SCREENX@_SCREENY@_SEC@_SECH@_SETALPHA@_SHELLHIDE@_SINH@_SNDBAL@_SNDCLOSE@_SNDCOPY@_SNDGETPOS@_SNDLEN@_SNDLIMIT@_SNDLOOP@_SNDOPEN@_SNDOPENRAW@_SNDPAUSE@_SNDPAUSED@_SNDPLAY@_SNDPLAYCOPY@_SNDPLAYFILE@_SNDPLAYING@_SNDRATE@_SNDRAW@_SNDRAWDONE@_SNDRAWLEN@_SNDSETPOS@_SNDSTOP@_SNDVOL@_SOURCE@_STARTDIR$@_STRCMP@_STRICMP@_TANH@_TITLE@_TITLE$@_UNSIGNED@_WHEEL@_WIDTH@_WINDOWHANDLE@_WINDOWHASFOCUS@_GLACCUM@_GLALPHAFUNC@_GLARETEXTURESRESIDENT@_GLARRAYELEMENT@_GLBEGIN@_GLBINDTEXTURE@_GLBITMAP@_GLBLENDFUNC@_GLCALLLIST@_GLCALLLISTS@_GLCLEAR@_GLCLEARACCUM@_GLCLEARCOLOR@_GLCLEARDEPTH@_GLCLEARINDEX@_GLCLEARSTENCIL@_GLCLIPPLANE@_GLCOLOR3B@_GLCOLOR3BV@_GLCOLOR3D@_GLCOLOR3DV@_GLCOLOR3F@_GLCOLOR3FV@_GLCOLOR3I@_GLCOLOR3IV@_GLCOLOR3S@_GLCOLOR3SV@_GLCOLOR3UB@_GLCOLOR3UBV@_GLCOLOR3UI@_GLCOLOR3UIV@_GLCOLOR3US@_GLCOLOR3USV@_GLCOLOR4B@_GLCOLOR4BV@_GLCOLOR4D@_GLCOLOR4DV@_GLCOLOR4F@_GLCOLOR4FV@_GLCOLOR4I@_GLCOLOR4IV@_GLCOLOR4S@_GLCOLOR4SV@_GLCOLOR4UB@_GLCOLOR4UBV@_GLCOLOR4UI@_GLCOLOR4UIV@_GLCOLOR4US@_GLCOLOR4USV@_GLCOLORMASK@_GLCOLORMATERIAL@_GLCOLORPOINTER@_GLCOPYPIXELS@_GLCOPYTEXIMAGE1D@_GLCOPYTEXIMAGE2D@_GLCOPYTEXSUBIMAGE1D@" + _
+    "_GLCOPYTEXSUBIMAGE2D@_GLCULLFACE@_GLDELETELISTS@_GLDELETETEXTURES@_GLDEPTHFUNC@_GLDEPTHMASK@_GLDEPTHRANGE@_GLDISABLE@_GLDISABLECLIENTSTATE@_GLDRAWARRAYS@_GLDRAWBUFFER@_GLDRAWELEMENTS@_GLDRAWPIXELS@_GLEDGEFLAG@_GLEDGEFLAGPOINTER@_GLEDGEFLAGV@_GLENABLE@_GLENABLECLIENTSTATE@_GLEND@_GLENDLIST@_GLEVALCOORD1D@_GLEVALCOORD1DV@_GLEVALCOORD1F@_GLEVALCOORD1FV@_GLEVALCOORD2D@_GLEVALCOORD2DV@_GLEVALCOORD2F@_GLEVALCOORD2FV@_GLEVALMESH1@_GLEVALMESH2@_GLEVALPOINT1@_GLEVALPOINT2@_GLFEEDBACKBUFFER@_GLFINISH@_GLFLUSH@_GLFOGF@_GLFOGFV@_GLFOGI@_GLFOGIV@_GLFRONTFACE@_GLFRUSTUM@_GLGENLISTS@_GLGENTEXTURES@_GLGETBOOLEANV@_GLGETCLIPPLANE@_GLGETDOUBLEV@_GLGETERROR@_GLGETFLOATV@_GLGETINTEGERV@_GLGETLIGHTFV@_GLGETLIGHTIV@_GLGETMAPDV@_GLGETMAPFV@_GLGETMAPIV@_GLGETMATERIALFV@_GLGETMATERIALIV@_GLGETPIXELMAPFV@_GLGETPIXELMAPUIV@_GLGETPIXELMAPUSV@_GLGETPOINTERV@_GLGETPOLYGONSTIPPLE@_GLGETSTRING@_GLGETTEXENVFV@_GLGETTEXENVIV@_GLGETTEXGENDV@_GLGETTEXGENFV@_GLGETTEXGENIV@_GLGETTEXIMAGE@_GLGETTEXLEVELPARAMETERFV@_GLGETTEXLEVELPARAMETERIV@_GLGETTEXPARAMETERFV@_GLGETTEXPARAMETERIV@_GLHINT@_GLINDEXMASK@_GLINDEXPOINTER@_GLINDEXD@_GLINDEXDV@_GLINDEXF@_GLINDEXFV@_GLINDEXI@_GLINDEXIV@_GLINDEXS@_GLINDEXSV@_GLINDEXUB@_GLINDEXUBV@_GLINITNAMES@_GLINTERLEAVEDARRAYS@_GLISENABLED@_GLISLIST@_GLISTEXTURE@_GLLIGHTMODELF@_GLLIGHTMODELFV@_GLLIGHTMODELI@_GLLIGHTMODELIV@_GLLIGHTF@_GLLIGHTFV@_GLLIGHTI@_GLLIGHTIV@_GLLINESTIPPLE@_GLLINEWIDTH@_GLLISTBASE@_GLLOADIDENTITY@_GLLOADMATRIXD@_GLLOADMATRIXF@_GLLOADNAME@_GLLOGICOP@_GLMAP1D@_GLMAP1F@_GLMAP2D@_GLMAP2F@_GLMAPGRID1D@_GLMAPGRID1F@_GLMAPGRID2D@_GLMAPGRID2F@_GLMATERIALF@_GLMATERIALFV@_GLMATERIALI@_GLMATERIALIV@_GLMATRIXMODE@_GLMULTMATRIXD@_GLMULTMATRIXF@_GLNEWLIST@_GLNORMAL3B@_GLNORMAL3BV@_GLNORMAL3D@_GLNORMAL3DV@_GLNORMAL3F@_GLNORMAL3FV@_GLNORMAL3I@_GLNORMAL3IV@_GLNORMAL3S@_GLNORMAL3SV@_GLNORMALPOINTER@_GLORTHO@_GLPASSTHROUGH@_GLPIXELMAPFV@_GLPIXELMAPUIV@_GLPIXELMAPUSV@_GLPIXELSTOREF@_GLPIXELSTOREI@_GLPIXELTRANSFERF@_GLPIXELTRANSFERI@_GLPIXELZOOM@_GLPOINTSIZE@_GLPOLYGONMODE@_GLPOLYGONOFFSET@_GLPOLYGONSTIPPLE@" + _
+    "_GLPOPATTRIB@_GLPOPCLIENTATTRIB@_GLPOPMATRIX@_GLPOPNAME@_GLPRIORITIZETEXTURES@_GLPUSHATTRIB@_GLPUSHCLIENTATTRIB@_GLPUSHMATRIX@_GLPUSHNAME@_GLRASTERPOS2D@_GLRASTERPOS2DV@_GLRASTERPOS2F@_GLRASTERPOS2FV@_GLRASTERPOS2I@_GLRASTERPOS2IV@_GLRASTERPOS2S@_GLRASTERPOS2SV@_GLRASTERPOS3D@_GLRASTERPOS3DV@_GLRASTERPOS3F@_GLRASTERPOS3FV@_GLRASTERPOS3I@_GLRASTERPOS3IV@_GLRASTERPOS3S@_GLRASTERPOS3SV@_GLRASTERPOS4D@_GLRASTERPOS4DV@_GLRASTERPOS4F@_GLRASTERPOS4FV@_GLRASTERPOS4I@_GLRASTERPOS4IV@_GLRASTERPOS4S@_GLRASTERPOS4SV@_GLREADBUFFER@_GLREADPIXELS@_GLRECTD@_GLRECTDV@_GLRECTF@_GLRECTFV@_GLRECTI@_GLRECTIV@_GLRECTS@_GLRECTSV@_GLRENDERMODE@_GLROTATED@_GLROTATEF@_GLSCALED@_GLSCALEF@_GLSCISSOR@_GLSELECTBUFFER@_GLSHADEMODEL@_GLSTENCILFUNC@_GLSTENCILMASK@_GLSTENCILOP@_GLTEXCOORD1D@_GLTEXCOORD1DV@_GLTEXCOORD1F@_GLTEXCOORD1FV@_GLTEXCOORD1I@_GLTEXCOORD1IV@_GLTEXCOORD1S@_GLTEXCOORD1SV@_GLTEXCOORD2D@_GLTEXCOORD2DV@_GLTEXCOORD2F@_GLTEXCOORD2FV@_GLTEXCOORD2I@_GLTEXCOORD2IV@_GLTEXCOORD2S@_GLTEXCOORD2SV@_GLTEXCOORD3D@_GLTEXCOORD3DV@_GLTEXCOORD3F@_GLTEXCOORD3FV@_GLTEXCOORD3I@_GLTEXCOORD3IV@_GLTEXCOORD3S@_GLTEXCOORD3SV@_GLTEXCOORD4D@_GLTEXCOORD4DV@_GLTEXCOORD4F@_GLTEXCOORD4FV@_GLTEXCOORD4I@_GLTEXCOORD4IV@_GLTEXCOORD4S@_GLTEXCOORD4SV@_GLTEXCOORDPOINTER@_GLTEXENVF@_GLTEXENVFV@_GLTEXENVI@_GLTEXENVIV@_GLTEXGEND@_GLTEXGENDV@_GLTEXGENF@_GLTEXGENFV@_GLTEXGENI@_GLTEXGENIV@_GLTEXIMAGE1D@_GLTEXIMAGE2D@_GLTEXPARAMETERF@_GLTEXPARAMETERFV@_GLTEXPARAMETERI@_GLTEXPARAMETERIV@_GLTEXSUBIMAGE1D@_GLTEXSUBIMAGE2D@_GLTRANSLATED@_GLTRANSLATEF@_GLVERTEX2D@_GLVERTEX2DV@_GLVERTEX2F@_GLVERTEX2FV@_GLVERTEX2I@_GLVERTEX2IV@_GLVERTEX2S@_GLVERTEX2SV@_GLVERTEX3D@_GLVERTEX3DV@_GLVERTEX3F@_GLVERTEX3FV@_GLVERTEX3I@_GLVERTEX3IV@_GLVERTEX3S@_GLVERTEX3SV@_GLVERTEX4D@_GLVERTEX4DV@_GLVERTEX4F@_GLVERTEX4FV@_GLVERTEX4I@_GLVERTEX4IV@_GLVERTEX4S@_GLVERTEX4SV@_GLVERTEXPOINTER@_GLVIEWPORT@SMOOTH@STRETCH@_ANTICLOCKWISE@_BEHIND@_CLEAR@_FILLBACKGROUND@_GLUPERSPECTIVE@_HARDWARE@_HARDWARE1@_KEEPBACKGROUND@_NONE@_ONLY@_ONLYBACKGROUND@_ONTOP@_SEAMLESS@_SMOOTH@_SMOOTHSHRUNK@_SMOOTHSTRETCHED@" + _
+    "_SOFTWARE@_SQUAREPIXELS@_STRETCH@_ALLOWFULLSCREEN@_ALL@_ECHO@_READFILE$@_WRITEFILE@_INSTRREV@_LASTHANDLER@_NEWHANDLER@_TRIM$@_ACCEPTFILEDROP@_FINISHDROP@_TOTALDROPPEDFILES@_DROPPEDFILE@_DROPPEDFILE$@_SHR@_SHL@_ROR@_ROL@" + _
+    "_ADLER32@_CRC32@_MD5$@_DEFLATE$@_INFLATE$@_READBIT@_RESETBIT@_SETBIT@_TOGGLEBIT@$INCLUDEONCE@$ASSERTS@CONSOLE@_ASSERT@_CAPSLOCK@_NUMLOCK@_SCROLLLOCK@_TOGGLE@_CONSOLEFONT@_CONSOLECURSOR@_CONSOLEINPUT@_CINP@$NOPREFIX@$COLOR@$DEBUG@$EMBED@_EMBEDDED$@_ENVIRONCOUNT@$UNSTABLE@$MIDISOUNDFONT@"
+
 const FALSE = 0, TRUE = -1
 
 const ASCII_TAB = 9
@@ -16,8 +27,6 @@ const ASCII_QUOTE = 34
 const TOK_EOF = 1
 const TOK_NEWLINE = 2
 const TOK_ID = 3
-const TOK_WHITESPACE = 4
-const TOK_LINENUM = 5
 const TOK_METACMD = 6
 const TOK_COMMENT = 7
 const TOK_STRING = 8
@@ -27,122 +36,218 @@ const TOK_PUNCTUATION = 11
 const TOK_OPAREN = 12
 const TOK_CPAREN = 13
 const TOK_COMMA = 14
+const TOK_COLON = 15
 
 const STATE_BEGIN = 1
-const STATE_LINENUM = 2
 const STATE_METACMD = 3
 const STATE_ID = 4
 const STATE_COMMENT = 5
 const STATE_STRING = 6
 const STATE_DATA = 7
-const STATE_GENERAL = 8
 const STATE_NUMBER = 9
-const STATE_WHITESPACE = 10
-const STATE_WHITESPACE_LEADING = 11
 const STATE_NEWLINE = 12
 const STATE_NEWLINE_WIN = 13
 
+type token_t
+    t as long 'TOK_ type
+    c as string 'Content
+    uc as string 'Content in UPPERCASE for comparisons
+    spaces as string 'Any whitespace characters detected before the content
+end type
+dim shared token as token_t
+
+redim shared prefix_keywords$(1) 'Stored without the prefix
 dim shared input_content$
 dim shared line_count, column_count
-dim shared next_chr_idx
-dim shared state
+dim shared next_chr_idx, tk_state
+dim shared noprefix_detected
 
-dim token, token_content$
 
-init
-
-token = next_token(token_content$)
+build_keyword_list
+load_file
 do
-' print "Token"; token; token_content$
-' sleep
-    select case token
-    case TOK_ID
-        select case ucase$(token_content$)
-        case "REM"
-            state = STATE_COMMENT
-        case "DATA"
-            state = STATE_DATA
-        end select
-    case TOK_NEWLINE
-        line_count = line_count + 1
-        column_count = 0
-    case TOK_EOF
-        exit do
-    end select
-    put #2, , token_content$
-    token = next_token(token_content$)
+    process_logical_line
 loop
-system
 
-sub init
-    open command$(1) for binary as #1
+
+sub load_file
     open command$(2) for output as #2
     close #2
     open command$(2) for binary as #2
-
-    input_content$ = space$(lof(1))
-    get #1, , input_content$
+    input_content$ = _readfile$(command$(1)) + chr$(ASCII_EOF)
     line_count = 1
     column_count = 0
     next_chr_idx = 1
-    state = STATE_BEGIN
-
-    input_content$ = input_content$ + chr$(ASCII_EOF)
+    tk_state = STATE_BEGIN
 end sub
 
-function next_token(token_content$)
-    dim c, return_token, unread
-    token_content$ = ""
+sub build_keyword_list
+    dim i, j, keyword$
+    i = 1
+    for j = 1 to len(KEYWORDS)
+        if asc(KEYWORDS, j) = asc("@") then
+            if asc(keyword$) = asc("_") then
+                if i > ubound(prefix_keywords$) then redim _preserve prefix_keywords$(ubound(prefix_keywords$) * 2)
+                prefix_keywords$(i) = mid$(keyword$, 2)
+                i = i + 1
+            end if
+            keyword$ = ""
+        else
+            keyword$ = keyword$ + mid$(KEYWORDS, j, 1)
+        end if
+    next j
+    redim _preserve prefix_keywords$(i - 1)
+end sub
+
+sub process_logical_line
+    next_token
+    select case token.t
+    case TOK_METACMD
+        select case token.uc
+        case "$NOPREFIX"
+            noprefix_detected = TRUE
+            'Keep remenant of $noprefix so line numbers are not changed
+            token.c = "'" + token.c + " removed here"
+        end select
+    case TOK_ID
+        select case token.uc
+        case "DATA"
+            tk_state = STATE_DATA
+        case "PUT"
+            process_put
+        case else
+            process_rest_of_line
+        end select
+    case else
+        process_rest_of_line
+    end select
+end sub
+
+sub process_put
+    next_token
+    if token.uc = "STEP" then next_token
+    if token.t = TOK_OPAREN then
+        skip_parens 'Coordinates
+        next_token ' ,
+        next_token 'Array name
+        if line_end then exit sub
+        skip_parens 'Array index
+        if line_end then exit sub
+        next_token ' ,
+        if line_end then exit sub
+        if token.t = TOK_ID and token.uc = "CLIP" then token.c = "_" + token.c
+    end if
+    process_rest_of_line
+end sub
+
+sub skip_parens
+    dim balance
     do
-        ' if next_chr_idx > len(input_content$) then
-        '     next_token = TOK_EOF
-        '     exit function
-        ' end if
+        if token.t = TOK_OPAREN then balance = balance + 1
+        if token.t = TOK_CPAREN then balance = balance - 1
+        next_token
+    loop until balance = 0
+end sub
+
+function line_end
+    select case token.t
+        case TOK_COLON
+            line_end = TRUE
+        case TOK_NEWLINE
+            line_count = line_count + 1
+            column_count = 0
+            line_end = TRUE
+    end select
+end function
+
+sub process_rest_of_line
+    dim i
+    do
+        select case token.t
+        case TOK_ID
+            select case token.uc
+            case "REM"
+                tk_state = STATE_COMMENT
+            case else
+                if noprefix_detected and asc(token.c) <> asc("_") then
+                    for i = 1 to ubound(prefix_keywords$)
+                        if token.uc = prefix_keywords$(i) then
+                            token.c = "_" + token.c
+                            exit for
+                        end if
+                    next i
+                end if
+            end select
+        case TOK_COLON
+            exit sub
+        case TOK_NEWLINE
+            line_count = line_count + 1
+            column_count = 0
+            exit sub
+        case TOK_EOF
+            finish
+        case else
+        end select
+        next_token
+    loop
+end sub
+
+sub put_out
+    put #2, , token.spaces
+    put #2, , token.c
+end sub
+
+sub finish
+    if not noprefix_detected then print "Warning: file does not use $NOPREFIX"
+    system
+end sub
+
+sub next_token
+    dim c, return_token, token_content$, spaces$, unread
+    if token.t > 0 then put_out
+    do
         c = asc(input_content$, next_chr_idx)
         next_chr_idx = next_chr_idx + 1
         column_count = column_count + 1
-' print chr$(c); state
-' sleep
-        select case state
+        select case tk_state
         case STATE_BEGIN
             select case c
             case asc("A") to asc("Z"), asc("a") to asc("z"), asc("_")
-                state = STATE_ID
-            case asc("0") to asc("9")
-                state = STATE_LINENUM
+                tk_state = STATE_ID
+            case asc("0") to asc("9"), asc("&"), asc(".")
+                tk_state = STATE_NUMBER
             case asc("$")
-                state = STATE_METACMD
-            case asc(" "), ASCII_TAB, ASCII_VTAB, ASCII_FF
-                state = STATE_WHITESPACE_LEADING
-            case else
-                state = STATE_GENERAL
-                unread = TRUE
-            end select
-        case STATE_WHITESPACE_LEADING
-            select case c
-            case asc(" "), ASCII_TAB, ASCII_VTAB, ASCII_FF
-                'Continue
-            case else
-                state = STATE_BEGIN
-                return_token = TOK_WHITESPACE
-                unread = TRUE
-            end select
-        case STATE_LINENUM
-            select case c
-            case asc("0") to asc("9")
-                'Continue
+                tk_state = STATE_METACMD
+            case asc("?")
+                return_token = TOK_ID
+            case asc("(")
+                return_token = TOK_OPAREN
+            case asc(")")
+                return_token = TOK_CPAREN
+            case asc(",")
+                return_token = TOK_COMMA
             case asc(":")
-                state = STATE_GENERAL
-                return_token = TOK_LINENUM
-            case else
-                state = STATE_GENERAL
-                return_token = TOK_LINENUM
+                return_token = TOK_COLON
+            case asc("^"), asc("*"), asc("-"), asc("+"), asc("="), asc("\"), asc("#"), _
+                 asc(";"), asc("<"), asc(">"), asc("/")
+                return_token = TOK_PUNCTUATION
+            case ASCII_QUOTE
+                tk_state = STATE_STRING
+            case asc("'")
+                tk_state = STATE_COMMENT
+            case asc(" "), ASCII_TAB, ASCII_VTAB
+                spaces$ = spaces$ + chr$(c)
+                _continue
+            case ASCII_CR, ASCII_LF, ASCII_EOF
+                tk_state = STATE_NEWLINE
                 unread = TRUE
+            case else
+                syntax_error chr$(c), token_content$
             end select
         case STATE_METACMD
             select case c
             case ASCII_CR, ASCII_LF, ASCII_EOF
-                state = STATE_NEWLINE
+                tk_state = STATE_NEWLINE
                 return_token = TOK_METACMD
                 unread = TRUE
             case else
@@ -154,14 +259,14 @@ function next_token(token_content$)
                  asc("`"), asc("~"), asc("!"), asc("#"), asc("$"), asc("%"), asc("&"), asc(".")
                 'Continue
             case else
-                state = STATE_GENERAL
+                tk_state = STATE_BEGIN
                 return_token = TOK_ID
                 unread = TRUE
             end select
         case STATE_COMMENT
             select case c
             case ASCII_CR, ASCII_LF, ASCII_EOF
-                state = STATE_NEWLINE
+                tk_state = STATE_NEWLINE
                 return_token = TOK_COMMENT
                 unread = TRUE
             case else
@@ -170,10 +275,10 @@ function next_token(token_content$)
         case STATE_STRING
             select case c
             case ASCII_QUOTE
-                state = STATE_GENERAL
+                tk_state = STATE_BEGIN
                 return_token = TOK_STRING
             case ASCII_CR, ASCII_LF, ASCII_EOF
-                state = STATE_NEWLINE
+                tk_state = STATE_NEWLINE
                 return_token = TOK_STRING
                 unread = TRUE
             case else
@@ -182,72 +287,29 @@ function next_token(token_content$)
         case STATE_DATA
             select case c
             case ASCII_CR, ASCII_LF, ASCII_EOF
-                state = STATE_NEWLINE
+                tk_state = STATE_NEWLINE
                 return_token = TOK_DATA
                 unread = TRUE
             case else
                 'Continue
             end select
-        case STATE_GENERAL
-            select case c
-            case asc("A") to asc("Z"), asc("a") to asc("z"), asc("_")
-                state = STATE_ID
-            case asc("0") to asc("9"), asc("&"), asc(".")
-                state = STATE_NUMBER
-            case asc("?")
-                state = STATE_GENERAL
-                return_token = TOK_ID
-            case asc("(")
-                state = STATE_GENERAL
-                return_token = TOK_OPAREN
-            case asc(")")
-                state = STATE_GENERAL
-                return_token = TOK_CPAREN
-            case asc(",")
-                state = STATE_GENERAL
-                return_token = TOK_COMMA
-            case asc("^"), asc("*"), asc("-"), asc("+"), asc("="), asc("\"), asc("#"), _
-                 asc(":"), asc(";"), asc("<"), asc(">"), asc("/")
-                state = STATE_GENERAL
-                return_token = TOK_PUNCTUATION
-            case ASCII_QUOTE
-                state = STATE_STRING
-            case asc("'")
-                state = STATE_COMMENT
-            case asc(" "), ASCII_TAB, ASCII_VTAB, ASCII_FF
-                state = STATE_WHITESPACE
-            case ASCII_CR, ASCII_LF, ASCII_EOF
-                state = STATE_NEWLINE
-                unread = TRUE
-            case else
-                syntax_error chr$(c), token_content$
-            end select
         case STATE_NUMBER
             select case c
-            case asc("0") to asc("9"), asc("."), asc(","), asc("a") to asc("f"), asc("A") to asc("F"), _
+            case asc("0") to asc("9"), asc("."), asc("a") to asc("f"), asc("A") to asc("F"), _
                  asc("`"), asc("~"), asc("!"), asc("#"), asc("%"), asc("&")
                 'Continue
             case else
-                state = STATE_GENERAL
+                tk_state = STATE_BEGIN
                 return_token = TOK_NUMBER
-                unread = TRUE
-            end select
-        case STATE_WHITESPACE
-            select case c
-            case asc(" "), ASCII_TAB, ASCII_VTAB, ASCII_FF
-                'Continue
-            case else
-                state = STATE_GENERAL
-                return_token = TOK_WHITESPACE
                 unread = TRUE
             end select
         case STATE_NEWLINE
             select case c
             case ASCII_LF
-                state = STATE_BEGIN
+                tk_state = STATE_BEGIN
                 return_token = TOK_NEWLINE
             case ASCII_CR
-                state = STATE_NEWLINE_WIN
+                tk_state = STATE_NEWLINE_WIN
             case ASCII_EOF
                 return_token = TOK_EOF
             case else
@@ -257,10 +319,10 @@ function next_token(token_content$)
         case STATE_NEWLINE_WIN
             select case c
             case ASCII_LF
-                state = STATE_BEGIN
+                tk_state = STATE_BEGIN
                 return_token = TOK_NEWLINE
             case else
-                state = STATE_BEGIN
+                tk_state = STATE_BEGIN
                 return_token = TOK_NEWLINE
                 unread = TRUE
             end select
@@ -274,7 +336,10 @@ function next_token(token_content$)
         end if
 
         if return_token then
-            next_token = return_token
+            token.t = return_token
+            token.c = token_content$
+            token.uc = ucase$(token_content$)
+            token.spaces = spaces$
             exit function
         end if
     loop
@@ -282,7 +347,7 @@ end function
 
 sub syntax_error(unexpected$, previous$)
     print "Line"; line_count; "column"; column_count;
-    print "State"; state;
+    print "State"; tk_state;
     print "Unexpected "; unexpected$; " coming after "; previous$
     system 1
 end sub
