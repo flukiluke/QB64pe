@@ -17,11 +17,16 @@ put step(x, _
    a(2),  clip and, 3
 clip = 2
 screenmove
-screenmove 1, 4
-screenmove middle
+screenmove 1, 4 : screenmove middle
+fullscreen
 fullscreen stretch
 fullscreen off, smooth
-smooth = 8
+fullscreen , smooth
+allowfullscreen
+allowfullscreen squarepixels
+allowfullscreen all, all
+allowfullscreen , off
+print smooth
 resize
 resize on
 resize , stretch
@@ -33,5 +38,17 @@ displayorder
 displayorder software rem do displayorder stuff
 displayorder software  ,_
              hardware,glrender
+if x then displayorder hardware1
+exit while
+print exit
+print _exit
+fps auto
+fps 30
+clearcolor
+clearcolor none, 2
+clearcolor , 1
+maptriangle anticlockwise seamless (1, 1, 1)-(2, 2, 2)-(3, 3, 3), 4 to (1, 1, 1)-(2, 2, 2)-(3, 3, 3), 1 + (4 * 2) / 3, smoothstretched
+maptriangle clockwise (1, 1)-(2, 2)-(3, 3) to (1, 1)-(2, 2)-(3, 3), , smoothshrunk
+maptriangle (1, 1)-(2, 2)-(3, 3) to (1, 1)-(2, 2)-(3, 3)
 
 data 1, hello, putimage, 3
