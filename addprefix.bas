@@ -26,25 +26,20 @@ const ASCII_QUOTE = 34
 
 const TOK_EOF = 1
 const TOK_NEWLINE = 2
-const TOK_ID = 3
+const TOK_WORD = 3
 const TOK_METACMD = 6
 const TOK_COMMENT = 7
 const TOK_STRING = 8
 const TOK_DATA = 9
-const TOK_NUMBER = 10
 const TOK_PUNCTUATION = 11
-const TOK_OPAREN = 12
-const TOK_CPAREN = 13
-const TOK_COMMA = 14
 const TOK_COLON = 15
 
 const STATE_BEGIN = 1
 const STATE_METACMD = 3
-const STATE_ID = 4
+const STATE_WORD = 4
 const STATE_COMMENT = 5
 const STATE_STRING = 6
 const STATE_DATA = 7
-const STATE_NUMBER = 9
 const STATE_NEWLINE = 12
 const STATE_NEWLINE_WIN = 13
 
@@ -109,7 +104,7 @@ sub process_logical_line
             'Keep remenant of $noprefix so line numbers are not changed
             token.c = "'" + token.c + " removed here"
         end select
-    case TOK_ID
+    case TOK_WORD
         select case token.uc
         case "DATA"
             tk_state = STATE_DATA
@@ -134,7 +129,7 @@ end sub
 sub process_put
     next_token
     if token.uc = "STEP" then next_token
-    if token.t = TOK_OPAREN then
+    if token.c = "(" then
         skip_parens 'Coordinates
         next_token ' ,
         next_token 'Array name
@@ -143,7 +138,7 @@ sub process_put
         if line_end then exit sub
         next_token ' ,
         if line_end then exit sub
-        if token.t = TOK_ID and token.uc = "CLIP" then add_prefix
+        if token.t = TOK_WORD and token.uc = "CLIP" then add_prefix
     end if
 end sub
 
@@ -188,8 +183,8 @@ end sub
 sub skip_parens
     dim balance
     do
-        if token.t = TOK_OPAREN then balance = balance + 1
-        if token.t = TOK_CPAREN then balance = balance - 1
+        if token.c = "(" then balance = balance + 1
+        if token.c = ")" then balance = balance - 1
         next_token
     loop until balance = 0
 end sub
@@ -216,7 +211,7 @@ sub process_rest_of_line
     dim i
     do
         select case token.t
-        case TOK_ID
+        case TOK_WORD
             select case token.uc
             case "REM"
                 tk_state = STATE_COMMENT
@@ -250,6 +245,7 @@ sub put_out
 end sub
 
 sub finish
+    put_out
     if not noprefix_detected then print "Warning: file does not use $NOPREFIX"
     system
 end sub
@@ -264,24 +260,15 @@ sub next_token
         select case tk_state
         case STATE_BEGIN
             select case c
-            case asc("A") to asc("Z"), asc("a") to asc("z"), asc("_")
-                tk_state = STATE_ID
-            case asc("0") to asc("9"), asc("&"), asc(".")
-                tk_state = STATE_NUMBER
+            case asc("A") to asc("Z"), asc("a") to asc("z"), asc("_"), asc("0") to asc("9"), _
+                 asc("&"), asc("."), asc("?")
+                tk_state = STATE_WORD
             case asc("$")
                 tk_state = STATE_METACMD
-            case asc("?")
-                return_token = TOK_ID
-            case asc("(")
-                return_token = TOK_OPAREN
-            case asc(")")
-                return_token = TOK_CPAREN
-            case asc(",")
-                return_token = TOK_COMMA
             case asc(":")
                 return_token = TOK_COLON
             case asc("^"), asc("*"), asc("-"), asc("+"), asc("="), asc("\"), asc("#"), _
-                 asc(";"), asc("<"), asc(">"), asc("/")
+                 asc(";"), asc("<"), asc(">"), asc("/"), asc("("), asc(")"), asc(",")
                 return_token = TOK_PUNCTUATION
             case ASCII_QUOTE
                 tk_state = STATE_STRING
@@ -294,7 +281,9 @@ sub next_token
                 tk_state = STATE_NEWLINE
                 unread = TRUE
             case else
-                syntax_error chr$(c), token_content$
+                'Likely non-ascii special character
+                syntax_warning chr$(c)
+                tk_state = STATE_WORD
             end select
         case STATE_METACMD
             select case c
@@ -302,17 +291,15 @@ sub next_token
                 tk_state = STATE_NEWLINE
                 return_token = TOK_METACMD
                 unread = TRUE
-            case else
-                'Continue
             end select
-        case STATE_ID
+        case STATE_WORD
             select case c
             case asc("A") to asc("Z"), asc("a") to asc("z"), asc("_"), asc("0") to asc("9"), _
-                 asc("`"), asc("~"), asc("!"), asc("#"), asc("$"), asc("%"), asc("&"), asc(".")
+                 asc("`"), asc("~"), asc("!"), asc("#"), asc("$"), asc("%"), asc("&"), asc("."), asc("?")
                 'Continue
             case else
                 tk_state = STATE_BEGIN
-                return_token = TOK_ID
+                return_token = TOK_WORD
                 unread = TRUE
             end select
         case STATE_COMMENT
@@ -321,8 +308,6 @@ sub next_token
                 tk_state = STATE_NEWLINE
                 return_token = TOK_COMMENT
                 unread = TRUE
-            case else
-                'Continue
             end select
         case STATE_STRING
             select case c
@@ -333,26 +318,12 @@ sub next_token
                 tk_state = STATE_NEWLINE
                 return_token = TOK_STRING
                 unread = TRUE
-            case else
-                'Continue
             end select
         case STATE_DATA
             select case c
             case ASCII_CR, ASCII_LF, ASCII_EOF
                 tk_state = STATE_NEWLINE
                 return_token = TOK_DATA
-                unread = TRUE
-            case else
-                'Continue
-            end select
-        case STATE_NUMBER
-            select case c
-            case asc("0") to asc("9"), asc("."), asc("a") to asc("f"), asc("A") to asc("F"), _
-                 asc("`"), asc("~"), asc("!"), asc("#"), asc("%"), asc("&")
-                'Continue
-            case else
-                tk_state = STATE_BEGIN
-                return_token = TOK_NUMBER
                 unread = TRUE
             end select
         case STATE_NEWLINE
@@ -364,9 +335,13 @@ sub next_token
                 tk_state = STATE_NEWLINE_WIN
             case ASCII_EOF
                 return_token = TOK_EOF
+                unread = TRUE 'Do not insert EOF character
             case else
                 'Should never happen
-                syntax_error chr$(c), token_content$
+                syntax_warning chr$(c)
+                tk_state = STATE_BEGIN
+                return_token = TOK_NEWLINE
+                unread = TRUE
             end select
         case STATE_NEWLINE_WIN
             select case c
@@ -397,9 +372,8 @@ sub next_token
     loop
 end function
 
-sub syntax_error(unexpected$, previous$)
-    print "Line"; line_count; "column"; column_count;
+sub syntax_warning(unexpected$)
+    print "Warning: Line"; line_count; "column"; column_count;
     print "State"; tk_state;
-    print "Unexpected "; unexpected$; " coming after "; previous$
-    system 1
+    print "Unexpected "; unexpected$
 end sub
