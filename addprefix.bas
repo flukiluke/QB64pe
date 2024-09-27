@@ -265,8 +265,21 @@ sub finish
 end sub
 
 sub next_token
-    dim c, return_token, token_content$, spaces$, unread
     if token.t > 0 then put_out
+    next_token_raw
+    while token.t = TOK_WORD and token.c = "_"
+        put_out
+        next_token_raw
+        if token.t <> TOK_NEWLINE then exit sub
+        line_count = line_count + 1
+        column_count = 0
+        put_out
+        next_token_raw
+    wend
+end sub
+
+sub next_token_raw
+    dim c, return_token, token_content$, spaces$, unread
     do
         c = asc(input_content$, next_chr_idx)
         next_chr_idx = next_chr_idx + 1

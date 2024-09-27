@@ -11,6 +11,10 @@ put step(x, (y + 1)), clip
 put step(x, (y + 1)), a(2) 
 put step(x, (y + 1)), a(2),clip 'this is a comment
 put step(x, (y + 1)), a(2),  clip and, 3
+put step(x, _
+   (y + 1)), _
+   _
+   a(2),  clip and, 3
 clip = 2
 screenmove
 screenmove 1, 4
@@ -27,6 +31,7 @@ glrender behind
 print ontop
 displayorder
 displayorder software rem do displayorder stuff
-displayorder software  ,hardware,glrender
+displayorder software  ,_
+             hardware,glrender
 
 data 1, hello, putimage, 3
