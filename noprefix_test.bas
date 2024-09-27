@@ -24,12 +24,12 @@ fullscreen off, smooth
 fullscreen , smooth
 allowfullscreen
 allowfullscreen squarepixels
-allowfullscreen all, all
+_allowfullscreen all, all
 allowfullscreen , off
 print smooth
 resize
 resize on
-resize , stretch
+_resize , stretch
 resize off, smooth
 x = resize
 glrender behind
@@ -47,8 +47,28 @@ fps 30
 clearcolor
 clearcolor none, 2
 clearcolor , 1
-maptriangle anticlockwise seamless (1, 1, 1)-(2, 2, 2)-(3, 3, 3), 4 to (1, 1, 1)-(2, 2, 2)-(3, 3, 3), 1 + (4 * 2) / 3, smoothstretched
+maptriangle anticlockwise seamless (1, 1)-(2, 2)-(3, 3), 4 to (1, 1, 1)-(2, 2, 2)-(3, 3, 3), 1 + (4 * 2) / 3, smoothstretched
 maptriangle clockwise (1, 1)-(2, 2)-(3, 3) to (1, 1)-(2, 2)-(3, 3), , smoothshrunk
 maptriangle (1, 1)-(2, 2)-(3, 3) to (1, 1)-(2, 2)-(3, 3)
-
+print smoothshrunk
+depthbuffer lock
+depthbuffer clear, 3
+clear x
+width 40
+print width(x)
+shell
+shell "asdf"
+shell dontwait
+shell hide
+shell dontwait "foo"
+shell hide "bar"
+shell dontwait hide "foo"
+shell hide dontwait "bar"
+capslock toggle
+scrolllock toggle
+numlock toggle
+consolecursor
+consolecursor show
+consolecursor hide
+consolecursor , 2
 data 1, hello, putimage, 3
