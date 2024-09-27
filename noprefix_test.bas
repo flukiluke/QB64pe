@@ -4,7 +4,7 @@ option explicit
 option explicitarray
 dim explicitarray
 explicitarray = 8
-dim x, y, clip, a(2), smooth, ontop
+dim x, y, s$, clip, a(2), smoothshrunk, ontop, bin(4)
 screen newimage(640, 480, 32)
 put 1, , x
 put step(x, (y + 1)), clip
@@ -39,7 +39,9 @@ displayorder software rem do displayorder stuff
 displayorder software  ,_
              hardware,glrender
 if x then displayorder hardware1
+while 0
 exit while
+wend
 print exit
 print _exit
 fps auto
@@ -71,4 +73,6 @@ consolecursor
 consolecursor show
 consolecursor hide
 consolecursor , 2
+x = bin(3)
+s$ = bin$(3)
 data 1, hello, putimage, 3
