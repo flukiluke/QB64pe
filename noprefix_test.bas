@@ -75,4 +75,10 @@ consolecursor hide
 consolecursor , 2
 x = bin(3)
 s$ = bin$(3)
+$color:32
+print red(100)
+print np_red
+print np_blue%
+print NP_GREEN&
+print Np_Blink~&&
 data 1, hello, putimage, 3

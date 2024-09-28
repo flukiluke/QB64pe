@@ -89,6 +89,7 @@ end type
 dim shared token as token_t
 
 redim shared prefix_keywords$(1) 'Stored without the prefix
+redim shared prefix_colors$(0)
 dim shared input_content$
 dim shared line_count, column_count
 dim shared next_chr_idx, tk_state
@@ -110,6 +111,16 @@ sub prepass
             if token.uc = "$NOPREFIX" then
                 noprefix_detected = TRUE
             end if
+        case TOK_WORD
+            select case token.uc
+            case "DATA"
+                tk_state = STATE_DATA
+            case "REM"
+                tk_state = STATE_COMMENT
+            end select
+        case TOK_NEWLINE
+            line_count = line_count + 1
+            column_count = 0
         case TOK_EOF
             exit do
         end select
@@ -131,6 +142,9 @@ sub rewind
     column_count = 0
     next_chr_idx = 1
     tk_state = STATE_BEGIN
+    token.t = 0
+    token.c = ""
+    token.uc = ""
 end sub
 
 sub build_keyword_list
@@ -155,15 +169,33 @@ sub build_keyword_list
     redim _preserve prefix_keywords$(i - 1)
 end sub
 
+sub build_color0_list
+    redim prefix_colors$(4)
+    prefix_colors$(1) = "NP_BLUE"
+    prefix_colors$(2) = "NP_GREEN"
+    prefix_colors$(3) = "NP_RED"
+    prefix_colors$(4) = "NP_BLINK"
+end sub
+
+sub build_color32_list
+    redim prefix_colors$(3)
+    prefix_colors$(1) = "NP_BLUE"
+    prefix_colors$(2) = "NP_GREEN"
+    prefix_colors$(3) = "NP_RED"
+end sub
+
 sub process_logical_line
     next_token
     select case token.t
     case TOK_METACMD
         select case token.uc
         case "$NOPREFIX"
-            noprefix_detected = TRUE
             'Keep remenant of $noprefix so line numbers are not changed
             token.c = "'" + token.c + " removed here"
+        case "$COLOR:0"
+            build_color0_list
+        case "$COLOR:32"
+            build_color32_list
         end select
     case TOK_WORD
         select case token.uc
@@ -389,7 +421,7 @@ function line_end
 end function
 
 sub process_rest_of_line
-    dim i
+    dim i, base_word$
     do
         select case token.t
         case TOK_WORD
@@ -399,7 +431,16 @@ sub process_rest_of_line
             case "THEN"
                 exit sub
             case else
-                if noprefix_detected and asc(token.c) <> asc("_") then
+                if noprefix_detected and left$(token.uc, 3) = "NP_" then
+                    base_word$ = make_base_word$(token.uc)
+                    for i = 1 to ubound(prefix_colors$)
+                        if base_word$ = prefix_colors$(i) then
+                            token.c = mid$(token.c, 4)
+                            token.uc = mid$(token.uc, 4)
+                            exit for
+                        end if
+                    next i
+                elseif noprefix_detected and asc(token.c) <> asc("_") then
                     for i = 1 to ubound(prefix_keywords$)
                         if token.uc = prefix_keywords$(i) then
                             add_prefix
@@ -431,6 +472,18 @@ sub finish
     put_out
     system
 end sub
+
+function make_base_word$(s$)
+    dim i
+    for i = 1 to len(s$)
+        select case asc(s$, i)
+        case asc("A") to asc("Z"), asc("a") to asc("z"), asc("0") to asc("9"), asc("_")
+        case else
+            exit for
+        end select
+    next i
+    make_base_word$ = left$(s$, i - 1)
+end function
 
 sub next_token
     if token.t > 0 then put_out
