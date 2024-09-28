@@ -1,5 +1,3 @@
-$noprefix
-
 option explicit
 option explicitarray
 dim explicitarray
@@ -23,6 +21,7 @@ fullscreen stretch
 fullscreen off, smooth
 fullscreen , smooth
 allowfullscreen
+$noprefix
 allowfullscreen squarepixels
 _allowfullscreen all, all
 allowfullscreen , off
@@ -33,6 +32,7 @@ _resize , stretch
 resize off, smooth
 x = resize
 glrender behind
+
 print ontop
 displayorder
 displayorder software rem do displayorder stuff

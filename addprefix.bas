@@ -97,16 +97,36 @@ dim shared noprefix_detected
 
 build_keyword_list
 load_file
+prepass
 do
     process_logical_line
 loop
 
+sub prepass
+    do
+        next_token_raw
+        select case token.t
+        case TOK_METACMD
+            if token.uc = "$NOPREFIX" then
+                noprefix_detected = TRUE
+            end if
+        case TOK_EOF
+            exit do
+        end select
+    loop
+    if not noprefix_detected then print "Warning: file does not use $NOPREFIX"
+    rewind
+end sub
 
 sub load_file
     open command$(2) for output as #2
     close #2
     open command$(2) for binary as #2
     input_content$ = _readfile$(command$(1)) + chr$(ASCII_EOF)
+    rewind
+end sub
+
+sub rewind
     line_count = 1
     column_count = 0
     next_chr_idx = 1
@@ -409,7 +429,6 @@ end sub
 
 sub finish
     put_out
-    if not noprefix_detected then print "Warning: file does not use $NOPREFIX"
     system
 end sub
 
