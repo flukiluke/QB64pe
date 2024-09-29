@@ -1,7 +1,7 @@
 option _explicit
+$screenhide
+$console
 deflng a-z
-$console:only
-_dest _console
 
 'Removed leading @
 'Line continutation formatting
@@ -96,9 +96,20 @@ dim shared line_count, column_count
 dim shared next_chr_idx, tk_state
 dim shared noprefix_detected
 
-
 build_keyword_list
-include_queue$(0) = command$(1)
+
+if _commandcount = 0 then
+    _screenshow
+    print "$NOPREFIX remover"
+    print "Files will be backed up before conversion."
+    print "Run this program with a file as a command-line argument or enter a file now"
+    print "File name: ";
+    line input include_queue$(0)
+else
+    _dest _console
+    include_queue$(0) = command$(1)
+end if
+
 do
     load_prepass_file include_queue$(current_include)
     prepass
@@ -106,7 +117,7 @@ do
 loop while current_include <= ubound(include_queue$)
 if not noprefix_detected then
     print "Program does not use $NOPREFIX, no changes made"
-    system
+    if _commandcount = 0 then end else system
 end if
 
 print "Found"; ubound(include_queue$); "$INCLUDE file(s)"
@@ -119,8 +130,8 @@ do
     close #2
     current_include = current_include + 1
 loop while current_include <= ubound(include_queue$)
-print "Conversion coplete"
-system
+print "Conversion complete"
+if _commandcount = 0 then end else system
 
 sub load_prepass_file (filename$)
     print "Analysing " + filename$
