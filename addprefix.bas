@@ -106,7 +106,7 @@ do
 loop while current_include <= ubound(include_queue$)
 if not noprefix_detected then
     print "Program does not use $NOPREFIX, no changes made"
-    'system
+    system
 end if
 
 print "Found"; ubound(include_queue$); "$INCLUDE file(s)"
@@ -168,7 +168,7 @@ sub load_file (filename$)
         backup$ = filename$ + "-noprefix"
     end if
     name filename$ as backup$
-    print "Copied " + filename$ + " to backup " + backup$
+    print "Moved " + filename$ + " to backup " + backup$
     print "Converting " + filename$
     input_content$ = _readfile$(backup$) + chr$(ASCII_EOF)
     open filename$ for binary as #2
@@ -178,7 +178,7 @@ end sub
 sub process_maybe_include
     dim s$, path$, open_quote, close_quote
     s$ = token.c
-    if asc(s$) = asc("'") then s$ = mid$(s$, 2)
+    if left$(s$, 1) = "'" then s$ = mid$(s$, 2)
     s$ = ltrim$(s$)
     if ucase$(left$(s$, 8)) <> "$INCLUDE" then exit sub
     open_quote = instr(s$, "'")
@@ -696,17 +696,15 @@ end sub
 
 'Get the directory component of a path
 function dir_name$(path$)
-    dim slash$, s
-    if instr(_os$, "WIN") then
-        slash$ = "\" '"
+    dim s1, s2
+    s1 = _instrrev(path$, "/")
+    s2 = _instrrev(path$, "\")
+    if s1 > s2 then
+        dir_name$ = left$(path$, s1 - 1)
+    elseif s2 > s1 then
+        dir_name$ = left$(path$, s2 - 1)
     else
-        slash$ = "/"
-    end if
-    s = _instrrev(path$, slash$)
-    if s = 0 then
         dir_name$ = "."
-    else
-        dir_name$ = left$(path$, s - 1)
     end if
 end function
 
