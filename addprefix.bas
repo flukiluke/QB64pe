@@ -219,6 +219,9 @@ sub queue_include (given_path$)
             exit sub
         end if
     end if
+    for i = 0 to ubound(include_queue$)
+        if include_queue$(i) = path$ then exit sub
+    next i
     i = ubound(include_queue$)
     redim _preserve include_queue$(i + 1)
     include_queue$(i + 1) = path$
