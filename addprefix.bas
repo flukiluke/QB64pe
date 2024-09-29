@@ -90,27 +90,57 @@ dim shared token as token_t
 
 redim shared prefix_keywords$(1) 'Stored without the prefix
 redim shared prefix_colors$(0)
-dim shared input_content$
+redim shared include_queue$(0)
+dim shared input_content$, current_include
 dim shared line_count, column_count
 dim shared next_chr_idx, tk_state
 dim shared noprefix_detected
 
 
 build_keyword_list
-load_file
-prepass
+include_queue$(0) = command$(1)
 do
-    process_logical_line
-loop
+    load_prepass_file include_queue$(current_include)
+    prepass
+    current_include = current_include + 1
+loop while current_include <= ubound(include_queue$)
+if not noprefix_detected then
+    print "Program does not use $NOPREFIX, no changes made"
+    'system
+end if
+
+print "Found"; ubound(include_queue$); "$INCLUDE file(s)"
+current_include = 0
+do
+    load_file include_queue$(current_include)
+    do
+        process_logical_line
+    loop while token.t <> TOK_EOF
+    close #2
+    current_include = current_include + 1
+loop while current_include <= ubound(include_queue$)
+print "Conversion coplete"
+system
+
+sub load_prepass_file (filename$)
+    print "Analysing " + filename$
+    input_content$ = _readfile$(filename$) + chr$(ASCII_EOF)
+    rewind
+end sub
 
 sub prepass
     do
         next_token_raw
         select case token.t
         case TOK_METACMD
-            if token.uc = "$NOPREFIX" then
+            select case token.uc
+            case "$NOPREFIX"
                 noprefix_detected = TRUE
-            end if
+            case "$COLOR:0"
+                build_color0_list
+            case "$COLOR:32"
+                build_color32_list
+            end select
         case TOK_WORD
             select case token.uc
             case "DATA"
@@ -118,6 +148,8 @@ sub prepass
             case "REM"
                 tk_state = STATE_COMMENT
             end select
+        case TOK_COMMENT
+            process_maybe_include
         case TOK_NEWLINE
             line_count = line_count + 1
             column_count = 0
@@ -125,16 +157,60 @@ sub prepass
             exit do
         end select
     loop
-    if not noprefix_detected then print "Warning: file does not use $NOPREFIX"
+end sub
+
+sub load_file (filename$)
+    dim ext, backup$
+    ext = _instrrev(filename$, ".")
+    if ext > 0 then
+        backup$ = left$(filename$, ext - 1) + "-noprefix" + mid$(filename$, ext)
+    else
+        backup$ = filename$ + "-noprefix"
+    end if
+    name filename$ as backup$
+    print "Copied " + filename$ + " to backup " + backup$
+    print "Converting " + filename$
+    input_content$ = _readfile$(backup$) + chr$(ASCII_EOF)
+    open filename$ for binary as #2
     rewind
 end sub
 
-sub load_file
-    open command$(2) for output as #2
-    close #2
-    open command$(2) for binary as #2
-    input_content$ = _readfile$(command$(1)) + chr$(ASCII_EOF)
-    rewind
+sub process_maybe_include
+    dim s$, path$, open_quote, close_quote
+    s$ = token.c
+    if asc(s$) = asc("'") then s$ = mid$(s$, 2)
+    s$ = ltrim$(s$)
+    if ucase$(left$(s$, 8)) <> "$INCLUDE" then exit sub
+    open_quote = instr(s$, "'")
+    close_quote = instr(open_quote + 1, s$, "'")
+    path$ = mid$(s$, open_quote + 1, close_quote - open_quote - 1)
+    queue_include path$
+end sub
+
+sub queue_include (given_path$)
+    dim current_path$, path$, i
+    if is_absolute_path(given_path$) then
+        if not _fileexists(given_path$) then
+            print "WARNING: cannot locate included file '" + given_path$ + "'"
+            exit sub
+        end if
+        path$ = given_path$
+    else
+        current_path$ = dir_name$(include_queue$(current_include))
+        'First check relative to path of current file
+        if _fileexists(current_path$ + "/" + given_path$) then
+            path$ = current_path$ + "/" + given_path$
+        'Next try relative to converter TODO: Change to relative to compiler
+        elseif _fileexists(given_path$) then
+            path$ = given_path$
+        else
+            print "WARNING: cannot locate included file '" + given_path$ + "'"
+            exit sub
+        end if
+    end if
+    i = ubound(include_queue$)
+    redim _preserve include_queue$(i + 1)
+    include_queue$(i + 1) = path$
 end sub
 
 sub rewind
@@ -192,10 +268,6 @@ sub process_logical_line
         case "$NOPREFIX"
             'Keep remenant of $noprefix so line numbers are not changed
             token.c = "'" + token.c + " removed here"
-        case "$COLOR:0"
-            build_color0_list
-        case "$COLOR:32"
-            build_color32_list
         end select
     case TOK_WORD
         select case token.uc
@@ -456,7 +528,8 @@ sub process_rest_of_line
             column_count = 0
             exit sub
         case TOK_EOF
-            finish
+            put_out
+            exit sub
         case else
         end select
         next_token
@@ -466,11 +539,6 @@ end sub
 sub put_out
     put #2, , token.spaces
     put #2, , token.c
-end sub
-
-sub finish
-    put_out
-    system
 end sub
 
 function make_base_word$(s$)
@@ -621,7 +689,31 @@ sub next_token_raw
 end function
 
 sub syntax_warning(unexpected$)
-    print "Warning: Line"; line_count; "column"; column_count;
+    print "WARNING: Line"; line_count; "column"; column_count;
     print "State"; tk_state;
     print "Unexpected "; unexpected$
 end sub
+
+'Get the directory component of a path
+function dir_name$(path$)
+    dim slash$, s
+    if instr(_os$, "WIN") then
+        slash$ = "\" '"
+    else
+        slash$ = "/"
+    end if
+    s = _instrrev(path$, slash$)
+    if s = 0 then
+        dir_name$ = "."
+    else
+        dir_name$ = left$(path$, s - 1)
+    end if
+end function
+
+function is_absolute_path(path$)
+    if instr(_os$, "WIN") then
+        is_absolute_path = (mid$(path$, 2, 1) = ":" or left$(path$, 1) = "\" or left$(path$, 1) = "/")
+    else
+        is_absolute_path = left$(path$, 1) = "/"
+    end if
+end function
