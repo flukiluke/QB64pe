@@ -58,7 +58,7 @@ const ASCII_LF = 10
 const ASCII_VTAB = 11
 const ASCII_FF = 12
 const ASCII_CR = 13
-const ASCII_EOF = 26
+const ASCII_EOF = 0 'Prefer NUL over ^Z for this purpose as some people embed ^Z in their programs
 const ASCII_QUOTE = 34
 
 const TOK_EOF = 1
