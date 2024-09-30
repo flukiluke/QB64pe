@@ -2,6 +2,20 @@ option explicit
 option explicitarray
 dim explicitarray
 explicitarray = 8
+declare function f(a as unsigned integer, fullscreen, newimage)
+type t
+   fullscreen as unsigned long
+   a as integer64
+   instr as unsigned byte
+end type
+dim q as t
+print t.fullscreen
+declare library
+   function a
+   function b()
+   function c(byval rgba as unsigned long)
+   function d%&(rgba as unsigned long, byval fullscreen&)
+end declare
 dim x, y, s$, clip, a(2), smoothshrunk, ontop, bin(4)
 screen newimage(640, 480, 32)
 put 1, , x
@@ -49,9 +63,9 @@ fps 30
 clearcolor
 clearcolor none, 2
 clearcolor , 1
-maptriangle anticlockwise seamless (1, 1)-(2, 2)-(3, 3), 4 to (1, 1, 1)-(2, 2, 2)-(3, 3, 3), 1 + (4 * 2) / 3, smoothstretched
-maptriangle clockwise (1, 1)-(2, 2)-(3, 3) to (1, 1)-(2, 2)-(3, 3), , smoothshrunk
-maptriangle (1, 1)-(2, 2)-(3, 3) to (1, 1)-(2, 2)-(3, 3)
+maptriangle anticlockwise seamless (1, 1)-(2, 2)-(3, 3), 4 to (1, 1, 1)-(2, 2, 2)-(3, 3, 3), 1 + (height * 2) / 3, smoothstretched
+maptriangle clockwise (1, 1)-(2, width)-(3, 3) to (1, 1)-(2, 2)-(3, 3), , smoothshrunk
+maptriangle (1, 1)-(2, 2)-(3, 3) to (1, 1)-(2, width)-(3, 3)
 print smoothshrunk
 depthbuffer lock
 depthbuffer clear, 3

@@ -91,10 +91,15 @@ dim shared token as token_t
 redim shared prefix_keywords$(1) 'Stored without the prefix
 redim shared prefix_colors$(0)
 redim shared include_queue$(0)
+dim shared exedir$
 dim shared input_content$, current_include
 dim shared line_count, column_count
 dim shared next_chr_idx, tk_state
 dim shared noprefix_detected
+dim shared in_udt, in_declare_library
+
+exedir$ = _cwd$
+chdir _startdir$
 
 build_keyword_list
 
@@ -212,8 +217,8 @@ sub queue_include (given_path$)
         if _fileexists(current_path$ + "/" + given_path$) then
             path$ = current_path$ + "/" + given_path$
         'Next try relative to converter TODO: Change to relative to compiler
-        elseif _fileexists(given_path$) then
-            path$ = given_path$
+        elseif _fileexists(exedir$ + "/" + given_path$) then
+            path$ = exedir$ + "/" + given_path$
         else
             print "WARNING: cannot locate included file '" + given_path$ + "'"
             exit sub
@@ -284,47 +289,84 @@ sub process_logical_line
             token.c = "'" + token.c + " removed here"
         end select
     case TOK_WORD
-        select case token.uc
-        case "DATA"
-            tk_state = STATE_DATA
-        case "PUT"
-            process_put
-        case "SCREENMOVE", "_SCREENMOVE"
-            process_screenmove
-        case "OPTION"
-            process_option
-        case "FULLSCREEN", "_FULLSCREEN"
-            process_fullscreen
-        case "ALLOWFULLSCREEN", "_ALLOWFULLSCREEN"
-            process_allowfullscreen
-        case "RESIZE", "_RESIZE"
-            process_resize
-        case "GLRENDER", "_GLRENDER"
-            process_glrender
-        case "DISPLAYORDER", "_DISPLAYORDER"
-            process_displayorder
-        case "EXIT"
-            next_token 'in statement position this is EXIT SUB etc.
-        case "FPS", "_FPS"
-            process_fps
-        case "CLEARCOLOR", "_CLEARCOLOR"
-            process_clearcolor
-        case "MAPTRIANGLE", "_MAPTRIANGLE"
-            process_maptriangle
-        case "DEPTHBUFFER", "_DEPTHBUFFER"
-            process_depthbuffer
-        case "WIDTH"
-            next_token 'in statement position this is the set-columns command
-        case "SHELL"
-            process_shell
-        case "CAPSLOCK", "_CAPSLOCK", "SCROLLLOCK", "_SCROLLLOCK", "NUMLOCK", "_NUMLOCK"
-            process_keylock
-        case "CONSOLECURSOR", "_CONSOLECURSOR"
-            process_consolecursor
-        end select
-    case else
+        if in_udt and token.uc = "END" then
+            in_udt = FALSE
+            in_declare_library = FALSE
+        elseif in_udt then
+            'In a UDT definition the field name is never a keyword
+            next_token
+        else
+            select case token.uc
+            case "SUB", "FUNCTION"
+                if in_declare_library then process_declare_library_def
+            case "TYPE"
+                in_udt = TRUE
+            case "DATA"
+                tk_state = STATE_DATA
+            case "DECLARE"
+                process_declare
+            case "PUT"
+                process_put
+            case "SCREENMOVE", "_SCREENMOVE"
+                process_screenmove
+            case "OPTION"
+                process_option
+            case "FULLSCREEN", "_FULLSCREEN"
+                process_fullscreen
+            case "ALLOWFULLSCREEN", "_ALLOWFULLSCREEN"
+                process_allowfullscreen
+            case "RESIZE", "_RESIZE"
+                process_resize
+            case "GLRENDER", "_GLRENDER"
+                process_glrender
+            case "DISPLAYORDER", "_DISPLAYORDER"
+                process_displayorder
+            case "EXIT"
+                next_token 'in statement position this is EXIT SUB etc.
+            case "FPS", "_FPS"
+                process_fps
+            case "CLEARCOLOR", "_CLEARCOLOR"
+                process_clearcolor
+            case "MAPTRIANGLE", "_MAPTRIANGLE"
+                process_maptriangle
+            case "DEPTHBUFFER", "_DEPTHBUFFER"
+                process_depthbuffer
+            case "WIDTH"
+                next_token 'in statement position this is the set-columns command
+            case "SHELL"
+                process_shell
+            case "CAPSLOCK", "_CAPSLOCK", "SCROLLLOCK", "_SCROLLLOCK", "NUMLOCK", "_NUMLOCK"
+                process_keylock
+            case "CONSOLECURSOR", "_CONSOLECURSOR"
+                process_consolecursor
+            end select
+        end if
     end select
     process_rest_of_line
+end sub
+
+sub process_declare
+    next_token
+    if token.uc = "SUB" or token.uc = "FUNCTION" then
+        while not line_end
+            next_token
+        wend
+    elseif token.uc = "LIBRARY" then
+        in_declare_library = TRUE
+    end if
+end sub
+
+sub process_declare_library_def
+    next_token
+    while token.uc <> "(" and not line_end
+        next_token
+    wend
+    while token.uc <> ")" and not line_end
+        next_token
+        if token.uc = "BYVAL" then next_token
+        next_token 'Skip argument name
+        skip_expr
+    wend
 end sub
 
 sub process_put
@@ -426,6 +468,7 @@ sub process_maptriangle
     if token.uc = "SEAMLESS" then add_prefix
     if token.uc = "_SEAMLESS" then next_token
     do
+        maybe_add_prefix
         next_token
     loop while token.uc <> "TO"
     next_token
@@ -477,15 +520,17 @@ sub skip_parens
     do
         if token.c = "(" then balance = balance + 1
         if token.c = ")" then balance = balance - 1
+        maybe_add_prefix
         next_token
     loop until balance = 0
 end sub
 
 sub skip_expr
     dim balance
-    do until balance = 0 and (token.c = "," or line_end)
+    do until balance <= 0 and (token.c = "," or line_end)
         if token.c = "(" then balance = balance + 1
         if token.c = ")" then balance = balance - 1
+        maybe_add_prefix
         next_token
     loop
 end sub
@@ -497,6 +542,10 @@ sub add_prefix
     end if
 end sub
 
+sub maybe_add_prefix
+    if noprefix_detected and token.t = TOK_WORD and asc(token.uc) <> asc("_") _andalso is_underscored(token.c) then add_prefix
+end sub
+
 function line_end
     select case token.t
         case TOK_WORD
@@ -504,6 +553,16 @@ function line_end
         case TOK_COLON, TOK_COMMENT, TOK_NEWLINE
             line_end = TRUE
     end select
+end function
+
+function is_underscored(s$)
+    dim i
+    for i = 1 to ubound(prefix_keywords$)
+        if token.uc = prefix_keywords$(i) then
+            is_underscored = TRUE
+            exit function
+        end if
+    next i
 end function
 
 sub process_rest_of_line
@@ -526,14 +585,9 @@ sub process_rest_of_line
                             exit for
                         end if
                     next i
-                elseif noprefix_detected and asc(token.c) <> asc("_") then
-                    for i = 1 to ubound(prefix_keywords$)
-                        if token.uc = prefix_keywords$(i) then
-                            add_prefix
-                            exit for
-                        end if
-                    next i
+                    exit select
                 end if
+                maybe_add_prefix
             end select
         case TOK_COLON
             exit sub
